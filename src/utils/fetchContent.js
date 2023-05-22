@@ -1,6 +1,6 @@
 import axios from "axios";
 const httpClient = axios.create({
-  baseURL: "http://localhost:3000/api/",
+  baseURL: "https://request-board-api.onrender.com/api/",
 });
 export const Method = {
   GET: "GET",
