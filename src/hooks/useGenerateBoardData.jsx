@@ -21,11 +21,10 @@ const useGenerateBoardData = () => {
     try {
       let res = await getAllCards();
       setIsLoading(false);
-      let dataMapped = res.lanes.map(lane => ({
+      setData({lanes: res.lanes.map(lane => ({
         ...lane,
         id: `${lane.id}`
-      })) 
-      setData({lanes: dataMapped});
+      })) });
     } catch (error) {
       setError(error);
       setIsError(true);
