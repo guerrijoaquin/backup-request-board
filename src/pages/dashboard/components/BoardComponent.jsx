@@ -50,7 +50,9 @@ const BoardComponent = () => {
   };
 
   const handleUpdate = (card) => {
-    updateCardR(card)
+    let { created_at, ...rest } = card;
+
+    updateCardR(rest)
       .then(() => {
         close();
       })
@@ -84,7 +86,7 @@ const BoardComponent = () => {
     <>
       {cardEditable && opened ? (
         <Drawer opened={opened} onClose={close}>
-          {user.id === cardEditable.user.id ? (
+          {user.id !== cardEditable.user.id ? (
             <>
               <Title
                 order={2}
