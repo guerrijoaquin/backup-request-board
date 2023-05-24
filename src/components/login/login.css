@@ -1,0 +1,10 @@
+body {
+  background-image: url('waves.png');
+  background-size: 100%;
+  background-position: center;
+}
+
+.login-title {
+  font-family: 'Greycliff CF', Arial, sans-serif;
+  font-weight: 750;
+}
