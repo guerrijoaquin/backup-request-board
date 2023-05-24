@@ -2,7 +2,7 @@ import { Box, Button, Drawer, Title } from "@mantine/core";
 import CreateCardForm from "../../components/CreateCardForm";
 import { useDisclosure } from "@mantine/hooks";
 import { CgAddR } from "react-icons/cg";
-import BoardComponent from "../../components/BoardComponent";
+import BoardComponent from "./components/BoardComponent";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
@@ -48,7 +48,7 @@ const Dashboard = () => {
         sx={{ position: "fixed", top: "10px", right: "10px" }}
         onClick={() => {
           userLogout();
-          navigate("/login");
+          navigate("/");
         }}
         size="md"
       >

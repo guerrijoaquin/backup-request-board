@@ -20,11 +20,11 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
           : null;
       },
       label: (value) =>
-        value.length <= 0 ? "Ingrese su nombre, por favor." : null,
+        value?.length <= 0 ? "Ingrese su nombre, por favor." : null,
       lane: (value) =>
-        value.length <= 0 ? "Seleccione una columna, por favor." : null,
+        value?.length <= 0 ? "Seleccione una columna, por favor." : null,
       description: (value) =>
-        value.length <= 10
+        value?.length <= 10
           ? "Ingrese una descripción breve, mayor a 10 letras, por favor."
           : null,
     },
@@ -35,14 +35,14 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let res = form.validate();
-    console.log(form.values, res, form.isValid());
+    form.validate();
     if (form.isValid()) {
+      form.values?.user ? delete form.values?.user : "";
       await callback(form.values)
-        .then(() => {
-          //   window.location.reload();
+        ?.then(() => {
+          window.location.reload();
         })
-        .catch((error) => {
+        ?.catch((error) => {
           alert("No se ha logrado crear la petición: " + error.message);
         });
     }

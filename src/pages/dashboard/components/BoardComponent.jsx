@@ -1,9 +1,12 @@
 import Board from "react-trello";
-import useGenerateBoardData from "../hooks/useGenerateBoardData";
+import useGenerateBoardData from "../../../hooks/useGenerateBoardData";
 import { Drawer, Loader, Title } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import InputFields from "./InputFields";
+import InputFields from "../../../components/InputFields";
+import CommentsContainer from "./CommentsContainer";
+import { CardArticle } from "./CardArticle";
+import { ActionContext } from "../../../context/ContextProvider";
 
 const BoardComponent = () => {
   const {
@@ -17,6 +20,7 @@ const BoardComponent = () => {
   } = useGenerateBoardData();
   const [opened, { open, close }] = useDisclosure(false);
   const [cardEditable, setCardEditable] = useState(false);
+  const { user } = useContext(ActionContext);
 
   const handleCardMove = async (fromLaneId, toLaneId, cardId) => {
     if (fromLaneId === toLaneId) {
@@ -33,17 +37,16 @@ const BoardComponent = () => {
   const handleCardClick = async (cardId) => {
     setCardEditable(false);
     console.log(cardId);
-    return await getCardById(cardId)
-      .then((res) => {
-        console.log(res);
-        setCardEditable(res);
-        open();
-      })
-      .catch(() => {
-        alert(`No se ha logrado obtener la info. de esta card`);
-        setCardEditable(false);
-        close();
-      });
+    try {
+      const res = await getCardById(cardId);
+      console.log(res);
+      setCardEditable(res);
+      open();
+    } catch {
+      alert(`No se ha logrado obtener la info. de esta card`);
+      setCardEditable(false);
+      close();
+    }
   };
 
   const handleUpdate = (card) => {
@@ -81,19 +84,43 @@ const BoardComponent = () => {
     <>
       {cardEditable && opened ? (
         <Drawer opened={opened} onClose={close}>
-          <Title
-            order={2}
-            color="gray"
-            size={"1.5rem"}
-            sx={{ textAlign: "center" }}
-          >
-            Editar petición
-          </Title>
-          <InputFields
-            defaultValues={cardEditable}
-            btnText={"Editar"}
-            callback={handleUpdate}
-          />
+          {user.id === cardEditable.user.id ? (
+            <>
+              <Title
+                order={2}
+                color="gray"
+                size={"1.5rem"}
+                sx={{ textAlign: "center", margin: "5px 0" }}
+              >
+                Request Board
+              </Title>
+              <CardArticle
+                createdAt={cardEditable.created_at}
+                description={cardEditable.description}
+                lane={cardEditable.lane}
+                user={cardEditable.user}
+                key={cardEditable.id}
+              />
+            </>
+          ) : (
+            <>
+              <Title
+                order={2}
+                color="gray"
+                size={"1.5rem"}
+                sx={{ textAlign: "center" }}
+              >
+                Editar petición
+              </Title>
+              <InputFields
+                defaultValues={cardEditable}
+                btnText={"Editar"}
+                callback={handleUpdate}
+              />
+            </>
+          )}
+
+          <CommentsContainer cardId={cardEditable.id} />
         </Drawer>
       ) : (
         ""
