@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./pages/login/Login";
 import Dashboard from "./pages/dashboard/Dashboard";
-import CreateAccount from "./components/login/creatAccount/CreateAccount";
+import CreateAccount from "./pages/creatAccount/CreateAccount";
 import { useContext } from "react";
 import { ActionContext } from "./context/ContextProvider";
 import { NotFound } from "./pages/NotFound/NotFound";
