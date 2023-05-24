@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Stepper, Button, Group, TextInput, PasswordInput, Container, Center } from '@mantine/core';
+import { Text, Stepper, Button, Group, TextInput, PasswordInput, Container, Center } from '@mantine/core';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -15,7 +15,6 @@ const ForgotPassword = () => {
     const [confirmPasswordError, setConfirmPasswordError] = useState('');
     const [username, setUsername] = useState('');
     const [usernameError, setUsernameError] = useState('');
-
 
     const nextStep = () => {
         if (active === 0) {
@@ -54,14 +53,14 @@ const ForgotPassword = () => {
             }
 
         } else if (active === 3) {
-            navigate('/login');
+            navigate('/');
         }
 
     };
 
     const prevStep = () => {
         if (active === 0) {
-            navigate('/login');
+            navigate('/');
             console.log('Redirigir a la pantalla de inicio de sesión');
         } else {
             setActive((current) => current - 1);
@@ -140,12 +139,12 @@ const ForgotPassword = () => {
                         </Container>
                     </Stepper.Step>
                     <Stepper.Step label="Paso 2" description="Ingresa el código de confirmación">
+                        <Container size={800} my={50}>
+                            <Center>
+                                <Text>Código de confirmación enviado al email: <strong>{email}</strong></Text>
+                            </Center>
+                        </Container>
                         <Container size={400} my={50}>
-                            <TextInput
-                                label="Email"
-                                value={email}
-                                readOnly
-                            />
                             <TextInput
                                 label="Código de confirmación"
                                 placeholder="Ingresa el código"
@@ -158,11 +157,7 @@ const ForgotPassword = () => {
                     </Stepper.Step>
                     <Stepper.Step label="Paso 3" description="Ingresa una nueva contraseña">
                         <Container size={400} my={50}>
-                            <TextInput
-                                label="Email"
-                                value={email}
-                                readOnly
-                            />
+                            <Text><strong>{email}</strong></Text>
                             <PasswordInput
                                 label="Nueva contraseña"
                                 placeholder="Ingresa una nueva contraseña"

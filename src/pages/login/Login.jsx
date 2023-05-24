@@ -104,7 +104,9 @@ const Login = () => {
         />
         <Group position="apart" mt="lg">
           <Checkbox label="Recordarme" />
-          <Anchor component="button" size="sm">
+          <Anchor component="button" size="sm"
+            onClick={() => navigate("/forgot-password")}
+          >
             ¿Olvidaste tu contraseña?
           </Anchor>
         </Group>

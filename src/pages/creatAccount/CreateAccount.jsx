@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
+  Text,
   Stepper,
   Button,
   Group,
@@ -160,10 +161,14 @@ const CreateAccount = () => {
             label="Segundo paso"
             description="Verificar correo electrónico"
           >
-            <Container size={400} my={50}>
-              <TextInput label="Email" value={email} readOnly />
+            <Container size={800} my={50}>
+              <Center>
+                <Text>Código de confirmación enviado al email: <strong>{email}</strong></Text>
+              </Center>
+            </Container>
+            <Container size={310} my={50}>
               <TextInput
-                label="Código de confirmación"
+                label="Insira el código de confirmación recebido"
                 placeholder="Ingresa el código"
                 required
               />
