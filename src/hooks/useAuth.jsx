@@ -2,15 +2,17 @@ import { useState } from "react";
 import { authFunction } from "../services/userServices";
 
 const useAuth = () => {
+  const [data, setData] = useState();
   const [isError, setIsError] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const authFunctions = async (endpoint, user) => {
+  const authFunctions = async (endpoint, user = null) => {
     setIsError(false);
     setIsLoading(true);
     try {
       let res = await authFunction(endpoint, user);
-      setIsLoading(true);
+      setIsLoading(false);
+      setData(res);
       return res;
     } catch (error) {
       console.log(error);
@@ -23,6 +25,7 @@ const useAuth = () => {
     isError,
     isLoading,
     authFunctions,
+    data,
   };
 };
 

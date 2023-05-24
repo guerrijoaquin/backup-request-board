@@ -6,7 +6,7 @@ import {
   fetchCardById,
   getAllCards,
   updateCard,
-} from "../services/lanesServices";
+} from "../services/boardServices";
 
 const useGenerateBoardData = () => {
   const [data, setData] = useState();
@@ -21,10 +21,7 @@ const useGenerateBoardData = () => {
     try {
       let res = await getAllCards();
       setIsLoading(false);
-      setData({lanes: res.lanes.map(lane => ({
-        ...lane,
-        id: `${lane.id}`
-      })) });
+      setData(res);
     } catch (error) {
       setError(error);
       setIsError(true);
@@ -34,15 +31,15 @@ const useGenerateBoardData = () => {
 
   const updateCardR = async (card) => {
     const { id, ...rest } = card;
-    await genericFunction(async () => await updateCard(rest, card.id));
+    return await genericFunction(async () => await updateCard(rest, card.id));
   };
 
   const createNewCard = async (card) => {
-    await genericFunction(async () => await createCard(card));
+    return await genericFunction(async () => await createCard(card));
   };
 
   const deleteCard = async (cardId) => {
-    await genericFunction(async () => await deleteCardById(cardId));
+    return await genericFunction(async () => await deleteCardById(cardId));
   };
 
   const getCardById = async (cardId) => {

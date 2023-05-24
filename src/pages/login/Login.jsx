@@ -1,4 +1,4 @@
-import { redirect, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   TextInput,
   PasswordInput,
@@ -10,28 +10,30 @@ import {
   Container,
   Group,
   Button,
+  Loader,
 } from "@mantine/core";
 
-import "./Login.css";
+import "./login.css";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "@mantine/form";
 import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const navigate = useNavigate();
-  const { isError, isLoading, authFunctions } = useAuth();
+  const { isError, isLoading, data, authFunctions } = useAuth();
   const { userLogin } = useContext(ActionContext);
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
     form.validate();
 
     if (form.isValid()) {
       console.log("todo ok");
-      userLogin({ ok: true });
-      navigate("/dashboard");
+      let data = await authFunctions("login", form.values);
+      console.log(data);
+      if (isError) return;
+      userLogin(data);
     }
   };
 
@@ -42,6 +44,10 @@ const Login = () => {
     },
 
     validate: {
+      email: (value) =>
+        /^[a-zA-Z0-9]+@adviters\.com$/.test(value)
+          ? null
+          : "El correo no es válido",
       password: (value) =>
         /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value)
           ? null
@@ -49,12 +55,9 @@ const Login = () => {
     },
   });
 
-  // email: (value) =>
-  //       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}\.adviters\.com$/.test(
-  //         value
-  //       )
-  //         ? null
-  //         : "El correo no es válido",
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <Container size={420} my={40}>
