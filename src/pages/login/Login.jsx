@@ -12,16 +12,15 @@ import {
   Button,
   Loader,
 } from "@mantine/core";
-
-import "./login.css";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "@mantine/form";
 import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const { isError, isLoading, data, authFunctions } = useAuth();
+  const { isError, isLoading, authFunctions } = useAuth();
   const { userLogin } = useContext(ActionContext);
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -72,7 +71,11 @@ const Login = () => {
       </Title>
       <Text color="dimmed" size="sm" align="center" mt={5}>
         ¿Aún no tienes una cuenta?{" "}
-        <Anchor size="sm" component="button">
+        <Anchor
+          size="sm"
+          component="button"
+          onClick={() => navigate("/create-account")}
+        >
           Crear cuenta
         </Anchor>
       </Text>
