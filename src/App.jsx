@@ -4,8 +4,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/login/Login";
+import Login from "./components/login/login";
 import Dashboard from "./pages/dashboard/Dashboard";
+import CreateAccount from "./components/login/creatAccount/CreateAccount";
 import { useContext } from "react";
 import { ActionContext } from "./context/ContextProvider";
 
@@ -16,6 +17,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/create-account" element={<CreateAccount />} />
         {user.isLogged && <Route path="/dashboard" element={<Dashboard />} />}
         <Route path="/*" element={<Navigate to="/login" />} />
       </Routes>
