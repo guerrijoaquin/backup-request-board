@@ -4,10 +4,13 @@ import { useDisclosure } from "@mantine/hooks";
 import { CgAddR } from "react-icons/cg";
 import BoardComponent from "../../components/BoardComponent";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { ActionContext } from "../../context/ContextProvider";
 
 const Dashboard = () => {
   const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
+  const { userLogout } = useContext(ActionContext);
 
   return (
     <>
@@ -43,7 +46,10 @@ const Dashboard = () => {
         color="indigo"
         title="Cerrar sesión"
         sx={{ position: "fixed", top: "10px", right: "10px" }}
-        onClick={() => navigate("/login")}
+        onClick={() => {
+          userLogout();
+          navigate("/login");
+        }}
         size="md"
       >
         Cerrar sesión
