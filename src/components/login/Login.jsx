@@ -64,9 +64,11 @@ const Login = () => {
         />
         <Group position="apart" mt="lg">
           <Checkbox label="Recordarme" />
-          <Anchor component="button" size="sm">
-            ¿Olvidaste tu contraseña?
-          </Anchor>
+          <Link to="/forgot-password">
+            <Anchor component="button" size="sm">
+              ¿Olvidaste tu contraseña?
+            </Anchor>
+          </Link>
         </Group>
         <Button fullWidth mt="xl" type="submit">
           Iniciar sesión
