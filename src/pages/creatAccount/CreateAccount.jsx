@@ -1,219 +1,112 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Text,
   Stepper,
   Button,
-  Group,
   TextInput,
   PasswordInput,
   Container,
   Center,
+  LoadingOverlay
 } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import useAuth from "../../hooks/useAuth";
 
 const CreateAccount = () => {
-  const navigate = useNavigate();
+  
+  const { errorMessage, isLoading, authFunctions } = useAuth();
   const [active, setActive] = useState(0);
-  const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [confirmPasswordError, setConfirmPasswordError] = useState("");
-  const [username, setUsername] = useState("");
-  const [usernameError, setUsernameError] = useState("");
 
   const nextStep = () => {
-    if (active < 3) {
-      const isEmailValid = validateEmail(email);
-      const isPasswordValid = validatePassword(password);
-      const isConfirmPasswordValid = validateConfirmPassword(
-        password,
-        confirmPassword
-      );
+      setActive((current) => current + 1);
+  };
 
-      if (isEmailValid && isPasswordValid && isConfirmPasswordValid) {
-        setEmailError("");
-        setPasswordError("");
-        setConfirmPasswordError("");
-        setActive((current) => current + 1);
-      } else {
-        if (!isEmailValid) {
-          setEmailError("El correo electrónico no es válido");
-        } else {
-          setEmailError("");
-        }
+  const signUpForm = useForm({
+    initialValues: {
+      email: '',
+      username: '',
+      password: 'holaAA2',
+      rePassword: 'holaAA2'
+    },
 
-        if (!isPasswordValid) {
-          setPasswordError(
-            "La contraseña debe tener al menos 6 caracteres, una letra mayúscula, una letra minúscula y un número."
-          );
-        } else {
-          setPasswordError("");
-        }
-
-        if (!isConfirmPasswordValid) {
-          setConfirmPasswordError("Las contraseñas no coinciden.");
-        } else {
-          setConfirmPasswordError("");
-        }
-      }
-    } else {
-      navigate("/login");
-      console.log("Redirigir a la pantalla de inicio de sesión");
+    validate: {
+      email: (value) => (/^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value) ? null : 'El email debe pertenecer a adviters'),
+      username: (value) => (/^[a-zA-Z0-9]+$/.test(value) ? null : 'Usuario inválido'),
+      password: (value) => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value) ? null : 'La contraseña es débil'),
+      rePassword: (value, values) => (value === values.password ? null : 'Las contraseñas no coinciden')
     }
+  })
 
-    if (active === 3) {
-      const isUsernameValid = validateUsername(username);
-      if (isUsernameValid) {
-        setUsernameError("");
-      } else {
-        if (!isUsernameValid) {
-          setUsernameError(
-            "El nombre de usuario no debe contener caracteres especiales ni espacios."
-          );
-        } else {
-          setUsernameError("");
-        }
-      }
-    }
-  };
+  const SignUp = async (data) => {
 
-  const prevStep = () => {
-    if (active === 0) {
-      navigate("/");
-      console.log("Redirigir a la pantalla de inicio de sesión");
-    } else {
-      setActive((current) => current - 1);
-    }
-  };
+      authFunctions("signup", {
+        email: data.email,
+        username: data.username,
+        password: data.password
+      }, nextStep);
 
-  const validateEmail = (email) => {
-    const isValid = /^[a-zA-Z0-9._%+-]+@adviters\.com$/.test(email);
-    return isValid;
-  };
-
-  const validatePassword = (password) => {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/;
-    const isValid = passwordRegex.test(password);
-    return isValid;
-  };
-
-  const validateConfirmPassword = (password, confirmPassword) => {
-    return password === confirmPassword;
-  };
-
-  const validateUsername = (username) => {
-    const usernameRegex = /^[a-zA-Z0-9]+$/;
-    const isValid = usernameRegex.test(username);
-    return isValid;
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
-  };
-
-  const handleConfirmPasswordChange = (event) => {
-    setConfirmPassword(event.target.value);
-  };
-
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  }
 
   return (
+    
     <Center>
       <Container size={700} my={50}>
         <Stepper active={active} onStepClick={setActive} breakpoint="sm">
-          <Stepper.Step label="Primer paso" description="Crear una cuenta">
-            <Container size={400} my={50}>
-              <TextInput
-                label="Email"
-                placeholder="tucorreo@adviters.com"
-                required
-                error={emailError}
-                value={email}
-                onChange={handleEmailChange}
-              />
-              <PasswordInput
-                label="Contraseña"
-                placeholder="Crear una contraseña"
-                required
-                error={passwordError}
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              <PasswordInput
-                label="Confirmar contraseña"
-                placeholder="Confirma la contraseña"
-                required
-                error={confirmPasswordError}
-                value={confirmPassword}
-                onChange={handleConfirmPasswordChange}
-              />
+          <Stepper.Step 
+            label="Primer paso" 
+            description="Crear una cuenta">
+            <Container size={400} my={50} pos="relative">
+              <LoadingOverlay visible={isLoading} overlayBlur={2}/>
+              <form onSubmit={signUpForm.onSubmit(SignUp)}>
+                <TextInput
+                  label="Email"
+                  placeholder="tucorreo@adviters.com"
+                  withAsterisk
+                  {...signUpForm.getInputProps('email')}
+                />
+                <TextInput
+                  label="Nombre de usuario"
+                  placeholder="tuusuario"
+                  withAsterisk
+                  {...signUpForm.getInputProps('username')}
+                />
+                <PasswordInput
+                  label="Contraseña"
+                  placeholder="Crear una contraseña"
+                  withAsterisk
+                  {...signUpForm.getInputProps('password')}
+                />
+                <PasswordInput
+                  label="Confirmar contraseña"
+                  placeholder="Confirma la contraseña"
+                  withAsterisk
+                  {...signUpForm.getInputProps('rePassword')}
+                />
+                <p style={{
+                  color: 'red',
+                  margin: '5px',
+                  marginLeft: '0',
+                  fontSize: '12px'
+                }}>{errorMessage}</p>
+                <Button type="submit" mt={"sm"} fullWidth>
+                  Registrarse
+                </Button>
+              </form>
             </Container>
           </Stepper.Step>
           <Stepper.Step
             label="Segundo paso"
             description="Verificar correo electrónico"
           >
-            <Container size={800} my={50}>
+              
+            <Container size={800} my={50} pos="relative">
               <Center>
-                <Text>Código de confirmación enviado al email: <strong>{email}</strong></Text>
+                <Text>Verifique su dirección de correo electrónico ingresando al link que recibió.</Text>
               </Center>
             </Container>
-            <Container size={310} my={50}>
-              <TextInput
-                label="Insira el código de confirmación recebido"
-                placeholder="Ingresa el código"
-                required
-              />
-            </Container>
           </Stepper.Step>
-          <Stepper.Step
-            label="Paso final"
-            description="Obtener acceso completo"
-          >
-            <Container size={400} my={50}>
-              <TextInput
-                label="Crea un nombre de usuario"
-                placeholder="Nombre de usuario"
-                required
-                error={usernameError}
-                value={username}
-                onChange={handleUsernameChange}
-              />
-            </Container>
-          </Stepper.Step>
-          <Stepper.Completed>
-            <Container size={600} my={50}>
-              <Container size={600} my={50}>
-                <p>Completado!!</p>
-                <p>
-                  Haz clic en el botón de <strong>Atrás</strong> para volver al
-                  paso anterior,
-                </p>
-                <p>
-                  O clic en <strong>Finalizar</strong> para ir al login.
-                </p>
-              </Container>
-            </Container>
-          </Stepper.Completed>
         </Stepper>
-        <Group position="center" mt="xl">
-          <Button variant="default" onClick={prevStep}>
-            Atrás
-          </Button>
-          {active === 3 ? (
-            <Button onClick={nextStep}>Finalizar</Button>
-          ) : (
-            <Button onClick={nextStep}>Siguiente paso</Button>
-          )}
-        </Group>
       </Container>
     </Center>
   );

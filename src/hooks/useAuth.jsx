@@ -3,29 +3,30 @@ import { authFunction } from "../services/userServices";
 
 const useAuth = () => {
   const [data, setData] = useState();
-  const [isError, setIsError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const authFunctions = async (endpoint, user = null) => {
-    setIsError(false);
+  const authFunctions = async (endpoint, user = null, successful) => {
     setIsLoading(true);
+    
     try {
       let res = await authFunction(endpoint, user);
       setIsLoading(false);
       setData(res);
-      return res;
+      successful()
     } catch (error) {
-      console.log(error);
-      setIsError(true);
+      console.log('Error bro');
+      setErrorMessage(error?.response?.data?.message || 'Ocurrió un error');
+    } finally {
       setIsLoading(false);
     }
   };
 
   return {
-    isError,
+    errorMessage,
     isLoading,
     authFunctions,
-    data,
+    data
   };
 };
 

@@ -2,7 +2,7 @@ import { fetchContent } from "../utils/fetchContent";
 
 export const authFunction = async (endpoint, user) => {
   let endp = endpoint.toLowerCase();
-  const endpoints = ["login", "logout", "check-status", "signup"];
+  const endpoints = ["login", "logout", "check-status", "signup", 'activate'];
 
   if (!endpoints.includes(endp)) throw new Error("Este endpoint no existe");
 
@@ -11,10 +11,6 @@ export const authFunction = async (endpoint, user) => {
     body: { ...user },
     withCredentials: true,
   };
-  try {
-    let res = await fetchContent(`auth/${endp}`, config);
-    return res;
-  } catch (error) {
-    throw new Error("Ha ocurrido un problema, ver server logs");
-  }
+
+  return fetchContent(`auth/${endp}`, config);
 };

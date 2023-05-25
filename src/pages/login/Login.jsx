@@ -18,22 +18,22 @@ import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const { isError, isLoading, authFunctions } = useAuth();
+  const { errorMessage, isLoading, authFunctions } = useAuth();
   const { userLogin } = useContext(ActionContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    form.validate();
+    // form.validate();
 
-    if (form.isValid()) {
-      console.log("todo ok");
-      let data = await authFunctions("login", form.values);
-      console.log(data);
-      if (isError) return;
-      userLogin(data);
-    }
+    // if (form.isValid()) {
+    //   console.log("todo ok");
+    //   let data = await authFunctions("login", form.values);
+    //   console.log(data);
+    //   if (isError) return;
+    //   userLogin(data);
+    // }
   };
 
   const form = useForm({
