@@ -11,6 +11,7 @@ import {
   Group,
   Button,
   Loader,
+  LoadingOverlay,
 } from "@mantine/core";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "@mantine/form";
@@ -22,41 +23,31 @@ const Login = () => {
   const { userLogin } = useContext(ActionContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    // form.validate();
-
-    // if (form.isValid()) {
+  const handleLogin = async (data) => {
     //   console.log("todo ok");
     //   let data = await authFunctions("login", form.values);
     //   console.log(data);
     //   if (isError) return;
     //   userLogin(data);
-    // }
+      // authFunctions("login", {
+      //   email: data.email,
+      //   username: data.username,
+      //   password: data.password
+      // }, nextStep);
+      alert('valid: ', data)
   };
 
   const form = useForm({
     initialValues: {
-      email: "",
-      password: "",
+      email: '',
+      password: ''
     },
 
     validate: {
-      email: (value) =>
-        /^[a-zA-Z0-9]+@adviters\.com$/.test(value)
-          ? null
-          : "El correo no es válido",
-      password: (value) =>
-        /(?:(?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/.test(value)
-          ? null
-          : "La contraseña debe tener por lo menos una letra mayúscula, minúscula y un número.",
-    },
-  });
-
-  if (isLoading) {
-    return <Loader />;
-  }
+      email: (value) => (/^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value) ? null : 'El email debe pertenecer a adviters'),
+      password: (value) => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value) ? null : 'La contraseña es débil')
+    }
+  })
 
   return (
     <Container size={420} my={40}>
@@ -89,16 +80,18 @@ const Login = () => {
         component="form"
         onSubmit={handleLogin}
       >
+        <LoadingOverlay visible={isLoading} overlayBlur={2}/>
+        <form onSubmit={form.onSubmit(handleLogin)}>
         <TextInput
           label="Correo electrónico"
           placeholder="tucorreo@ejemplo.com"
-          required
+          withAsterisk
           {...form.getInputProps("email")}
         />
         <PasswordInput
           label="Contraseña"
           placeholder="Tu contraseña"
-          required
+          withAsterisk
           mt="md"
           {...form.getInputProps("password")}
         />
@@ -113,6 +106,7 @@ const Login = () => {
         <Button fullWidth mt="xl" type="submit">
           Iniciar sesión
         </Button>
+        </form>
       </Paper>
     </Container>
   );
