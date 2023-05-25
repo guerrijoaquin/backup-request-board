@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
 import {
   Text,
   Stepper,
@@ -8,87 +7,97 @@ import {
   PasswordInput,
   Container,
   Center,
-  LoadingOverlay
+  LoadingOverlay,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import useAuth from "../../hooks/useAuth";
 
 const CreateAccount = () => {
-  
   const { errorMessage, isLoading, authFunctions } = useAuth();
   const [active, setActive] = useState(0);
 
   const nextStep = () => {
-      setActive((current) => current + 1);
+    setActive((current) => current + 1);
   };
 
   const signUpForm = useForm({
     initialValues: {
-      email: '',
-      username: '',
-      password: 'holaAA2',
-      rePassword: 'holaAA2'
+      email: "",
+      username: "",
+      password: "holaAA2",
+      rePassword: "holaAA2",
     },
 
     validate: {
-      email: (value) => (/^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value) ? null : 'El email debe pertenecer a adviters'),
-      username: (value) => (/^[a-zA-Z0-9]+$/.test(value) ? null : 'Usuario inválido'),
-      password: (value) => (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value) ? null : 'La contraseña es débil'),
-      rePassword: (value, values) => (value === values.password ? null : 'Las contraseñas no coinciden')
-    }
-  })
+      email: (value) =>
+        /^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value)
+          ? null
+          : "El email debe pertenecer a adviters",
+      username: (value) =>
+        /^[a-zA-Z0-9]+$/.test(value) ? null : "Usuario inválido",
+      password: (value) =>
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value)
+          ? null
+          : "La contraseña es débil",
+      rePassword: (value, values) =>
+        value === values.password ? null : "Las contraseñas no coinciden",
+    },
+  });
 
   const SignUp = async (data) => {
-
-      authFunctions("signup", {
+    authFunctions(
+      "signup",
+      {
         email: data.email,
         username: data.username,
-        password: data.password
-      }, nextStep);
-
-  }
+        password: data.password,
+      },
+      nextStep
+    );
+  };
 
   return (
-    
     <Center>
       <Container size={700} my={50}>
         <Stepper active={active} onStepClick={setActive} breakpoint="sm">
-          <Stepper.Step 
-            label="Primer paso" 
-            description="Crear una cuenta">
+          <Stepper.Step label="Primer paso" description="Crear una cuenta">
             <Container size={400} my={50} pos="relative">
-              <LoadingOverlay visible={isLoading} overlayBlur={2}/>
+              <LoadingOverlay visible={isLoading} overlayBlur={2} />
               <form onSubmit={signUpForm.onSubmit(SignUp)}>
                 <TextInput
                   label="Email"
                   placeholder="tucorreo@adviters.com"
                   withAsterisk
-                  {...signUpForm.getInputProps('email')}
+                  {...signUpForm.getInputProps("email")}
                 />
                 <TextInput
                   label="Nombre de usuario"
                   placeholder="tuusuario"
                   withAsterisk
-                  {...signUpForm.getInputProps('username')}
+                  {...signUpForm.getInputProps("username")}
                 />
                 <PasswordInput
                   label="Contraseña"
                   placeholder="Crear una contraseña"
                   withAsterisk
-                  {...signUpForm.getInputProps('password')}
+                  {...signUpForm.getInputProps("password")}
                 />
                 <PasswordInput
                   label="Confirmar contraseña"
                   placeholder="Confirma la contraseña"
                   withAsterisk
-                  {...signUpForm.getInputProps('rePassword')}
+                  {...signUpForm.getInputProps("rePassword")}
                 />
-                <p style={{
-                  color: 'red',
-                  margin: '5px',
-                  marginLeft: '0',
-                  fontSize: '12px'
-                }}>{errorMessage}</p>
+                <p
+                  style={{
+                    color: "red",
+                    margin: "5px",
+                    marginLeft: "0",
+                    fontSize: "12px",
+                  }}
+                >
+                  {errorMessage}
+                </p>
                 <Button type="submit" mt={"sm"} fullWidth>
                   Registrarse
                 </Button>
@@ -99,10 +108,12 @@ const CreateAccount = () => {
             label="Segundo paso"
             description="Verificar correo electrónico"
           >
-              
             <Container size={800} my={50} pos="relative">
               <Center>
-                <Text>Verifique su dirección de correo electrónico ingresando al link que recibió.</Text>
+                <Text>
+                  Verifique su dirección de correo electrónico ingresando al
+                  link que recibió.
+                </Text>
               </Center>
             </Container>
           </Stepper.Step>
