@@ -7,33 +7,56 @@ import InputFields from "../../../components/InputFields";
 import CommentsContainer from "./CommentsContainer";
 import { CardArticle } from "./CardArticle";
 import { ActionContext } from "../../../context/ContextProvider";
+import { notifications } from "@mantine/notifications";
+import { customNotif } from "../../../utils/simplifiedNotifications";
 
 const BoardComponent = () => {
-  const {
-    data,
-    isLoading,
-    isError,
-    getData,
-    updateCardR,
-    deleteCard,
-    getCardById,
-  } = useGenerateBoardData();
+  const { isLoading, isError, getData, updateCardR, deleteCard, getCardById } =
+    useGenerateBoardData();
   const [opened, { open, close }] = useDisclosure(false);
   const [cardEditable, setCardEditable] = useState(false);
-  const { user } = useContext(ActionContext);
+  const { user, board, setFunctions } = useContext(ActionContext);
 
-  const handleCardMove = async (fromLaneId, toLaneId, cardId) => {
-    if (fromLaneId === toLaneId) {
-      return;
+  const handleDragEnd = async (
+    cardId,
+    sourceLaneId,
+    targetLaneId,
+    position,
+    cardDetails
+  ) => {
+    console.log(cardId, sourceLaneId, targetLaneId, position, cardDetails);
+    if (sourceLaneId === targetLaneId) {
+      await getData();
+      return customNotif(
+        "error",
+        "No se puede mover una card en la misma columna."
+      );
     }
-    await updateCardR({ lane: "" + toLaneId, id: cardId });
+    if (cardDetails?.user?.id !== user?.id) {
+      await getData();
+      return customNotif("error", "No puede mover una card que no sea suya.");
+    }
+    try {
+      let res = await updateCardR({ lane: "" + targetLaneId, id: cardId });
+      console.log(res);
+      return true;
+    } catch (error) {
+      console.log(error);
+      customNotif("error", "No se ha podido mover de columna esta card.");
+      return false;
+    }
   };
-
   const handleCardDelete = async (cardId) => {
     console.log(cardId);
-    await deleteCard(cardId);
+    try {
+      await deleteCard(cardId);
+    } catch (error) {
+      customNotif(
+        "error",
+        error?.message || "No se ha podido eliminar esta card."
+      );
+    }
   };
-
   const handleCardClick = async (cardId) => {
     setCardEditable(false);
     console.log(cardId);
@@ -43,26 +66,26 @@ const BoardComponent = () => {
       setCardEditable(res);
       open();
     } catch {
-      alert(`No se ha logrado obtener la info. de esta card`);
+      customNotif("error", "No se ha logrado obtener la info. de esta card");
       setCardEditable(false);
       close();
     }
   };
-
-  const handleUpdate = (card) => {
+  const handleUpdate = async (card) => {
     let { created_at, ...rest } = card;
-
-    updateCardR(rest)
-      .then(() => {
-        close();
-      })
-      .catch(() =>
-        alert(
-          "No se ha podido actualizar, intente nuevamente y verifique la información"
-        )
+    try {
+      await updateCardR(rest);
+      await getData();
+      close();
+    } catch (error) {
+      customNotif(
+        "No se ha podido actualizar, intente nuevamente y verifique la información"
       );
+    }
   };
-
+  const setEventBus = (handle) => {
+    setFunctions(handle);
+  };
   useEffect(() => {
     let fetch = async () => {
       await getData();
@@ -73,7 +96,6 @@ const BoardComponent = () => {
   if (isLoading) {
     return <Loader />;
   }
-
   if (isError) {
     return (
       <Title order={2} color="red" size={"2rem"} sx={{ textAlign: "center" }}>
@@ -81,12 +103,11 @@ const BoardComponent = () => {
       </Title>
     );
   }
-
   return (
     <>
       {cardEditable && opened ? (
         <Drawer opened={opened} onClose={close}>
-          {user.id !== cardEditable.user.id ? (
+          {user?.id !== cardEditable?.user?.id ? (
             <>
               <Title
                 order={2}
@@ -127,14 +148,15 @@ const BoardComponent = () => {
       ) : (
         ""
       )}
-      {data && (
+      {board && board?.lanes && (
         <Board
-          data={data}
+          data={board}
           style={{ backgroundColor: "#fff" }}
-          onCardMoveAcrossLanes={handleCardMove}
           onCardDelete={handleCardDelete}
+          handleDragEnd={handleDragEnd}
           laneDraggable={false}
           onCardClick={handleCardClick}
+          eventBusHandle={setEventBus}
         />
       )}
     </>

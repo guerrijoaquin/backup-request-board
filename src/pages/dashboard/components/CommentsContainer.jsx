@@ -3,6 +3,7 @@ import { useLayoutEffect, useState } from "react";
 import { getCommentsByCardId } from "../../../services/boardServices";
 import { Comment } from "./Comment";
 import { Box, Loader, Title } from "@mantine/core";
+import { customNotif } from "../../../utils/simplifiedNotifications";
 
 const CommentsContainer = ({ cardId }) => {
   const [data, setData] = useState({});
@@ -12,9 +13,16 @@ const CommentsContainer = ({ cardId }) => {
     if (cardId) {
       setIsLoading(true);
       const fetch = async () => {
-        let res = await getCommentsByCardId(cardId);
-        setIsLoading(false);
-        setData(res);
+        try {
+          let res = await getCommentsByCardId(cardId);
+          setIsLoading(false);
+          setData(res);
+        } catch (error) {
+          customNotif(
+            "show",
+            "No se ha logrado cargar los comentarios de esta card"
+          );
+        }
       };
       fetch();
     }

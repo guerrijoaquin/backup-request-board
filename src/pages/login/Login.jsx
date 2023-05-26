@@ -19,8 +19,8 @@ import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const { errorMessage, isLoading, authFunctions } = useAuth();
-  const { userLogin, userLogout } = useContext(ActionContext);
+  const { errorMessage, isLoading, authFunctions, data } = useAuth();
+  const { userLogin } = useContext(ActionContext);
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -28,10 +28,12 @@ const Login = () => {
     form.validate();
     if (form.isValid()) {
       try {
-        let data = await authFunctions("login", form.values);
-        return userLogin(data);
+        let res = await authFunctions("login", form.values);
+        if (res) {
+          console.log(res);
+          userLogin(res);
+        }
       } catch (e) {
-        userLogout();
         console.log(e, errorMessage);
       }
     }

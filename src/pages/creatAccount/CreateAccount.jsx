@@ -11,6 +11,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import useAuth from "../../hooks/useAuth";
+import { customNotif } from "../../utils/simplifiedNotifications";
 
 const CreateAccount = () => {
   const { errorMessage, isLoading, authFunctions } = useAuth();
@@ -45,15 +46,23 @@ const CreateAccount = () => {
   });
 
   const SignUp = async (data) => {
-    authFunctions(
-      "signup",
-      {
-        email: data.email,
-        username: data.username,
-        password: data.password,
-      },
-      nextStep
-    );
+    try {
+      await authFunctions(
+        "signup",
+        {
+          email: data.email,
+          username: data.username,
+          password: data.password,
+        },
+        nextStep
+      );
+    } catch (error) {
+      console.log(error);
+      customNotif(
+        "error",
+        "No ha sido posible crear la cuenta, intente nuevamente y verifique los datos"
+      );
+    }
   };
 
   return (

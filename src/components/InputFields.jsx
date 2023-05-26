@@ -1,50 +1,49 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/prop-types */
-import { Box, Button, NativeSelect, TextInput, Textarea } from "@mantine/core";
+import {
+  Box,
+  Button,
+  NativeSelect,
+  Select,
+  TextInput,
+  Textarea,
+} from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 
 const InputFields = ({ defaultValues, callback, btnText }) => {
   useEffect(() => {
     if (defaultValues) {
-      form.setValues({ ...defaultValues, lane: defaultValues.lane.title });
+      form.setValues({ ...defaultValues });
     }
   }, []);
 
   const form = useForm({
     validate: {
-      title: (value) => {
-        console.log("title: " + value);
-        value.length < 5
-          ? "El título tiene que tener al menos de 5 letras"
-          : null;
-      },
+      title: (value) =>
+        value?.length >= 5
+          ? null
+          : "El título tiene que tener al menos 5 letras, por favor.",
       label: (value) =>
-        value?.length <= 0 ? "Ingrese su nombre, por favor." : null,
-      lane: (value) =>
-        value?.length <= 0 ? "Seleccione una columna, por favor." : null,
+        value?.length > 0 ? null : "Ingrese su nombre, por favor.",
+      lane: (value) => {
+        console.log(value);
+        return value?.length > 0 ? null : "Seleccione una columna, por favor.";
+      },
       description: (value) =>
-        value?.length <= 10
-          ? "Ingrese una descripción breve, mayor a 10 letras, por favor."
-          : null,
+        value?.length > 10
+          ? null
+          : "Ingrese una descripción breve, mayor a 10 letras, por favor.",
     },
-    transformValues: (values) => ({
-      lane: "" + values.lane,
-    }),
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     form.validate();
+    console.log(form.values);
     if (form.isValid()) {
       form.values?.user ? delete form.values?.user : "";
-      await callback(form.values)
-        ?.then(() => {
-          window.location.reload();
-        })
-        ?.catch((error) => {
-          alert("No se ha logrado crear la petición: " + error.message);
-        });
+      await callback(form.values);
     }
   };
 
@@ -71,8 +70,9 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
         withAsterisk
         {...form.getInputProps("label")}
       />
-      <NativeSelect
+      <Select
         data={["VENDO", "COMPRO", "ALQUILO", "REGALO"]}
+        placeholder="Seleccionar"
         label="Selecciona tu columna"
         name="lane"
         withAsterisk

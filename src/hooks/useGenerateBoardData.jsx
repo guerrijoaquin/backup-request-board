@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   createCard,
   deleteCardById,
@@ -7,21 +7,31 @@ import {
   getAllCards,
   updateCard,
 } from "../services/boardServices";
+import { ActionContext } from "../context/ContextProvider";
 
 const useGenerateBoardData = () => {
+  const { setBoard, board, functions } = useContext(ActionContext);
   const [data, setData] = useState();
   const [error, setError] = useState();
   const [isError, setIsError] = useState();
   const [isLoading, setIsLoading] = useState();
 
   const getData = async () => {
-    setError({});
-    setIsError(false);
-    setIsLoading(true);
     try {
+      if (board?.lanes) {
+        let res = await getAllCards();
+        console.log("board.lanes exist and data retrived was: " + res);
+        functions?.publish({ type: "UPDATE_LANES", lanes: res });
+        setBoard(res);
+        return;
+      }
+      setError({});
+      setIsError(false);
+      setIsLoading(true);
+
       let res = await getAllCards();
       setIsLoading(false);
-      setData(res);
+      return setBoard(res);
     } catch (error) {
       setError(error);
       setIsError(true);
@@ -31,15 +41,33 @@ const useGenerateBoardData = () => {
 
   const updateCardR = async (card) => {
     const { id, ...rest } = card;
-    return await genericFunction(async () => await updateCard(rest, card.id));
+    try {
+      await updateCard(rest, card.id);
+      await getData();
+    } catch (error) {
+      console.log(error);
+      throw new Error("No se ha podido actualizar esta card");
+    }
   };
 
   const createNewCard = async (card) => {
-    return await genericFunction(async () => await createCard(card));
+    try {
+      await createCard(card);
+      await getData();
+    } catch (error) {
+      console.log(error);
+      throw new Error("No se ha podido crear esta card");
+    }
   };
 
   const deleteCard = async (cardId) => {
-    return await genericFunction(async () => await deleteCardById(cardId));
+    try {
+      await deleteCardById(cardId);
+      await getData();
+    } catch (error) {
+      console.log(error);
+      throw new Error("No se ha podido eliminar esta card");
+    }
   };
 
   const getCardById = async (cardId) => {
@@ -50,22 +78,22 @@ const useGenerateBoardData = () => {
     }
   };
 
-  const genericFunction = async (callback) => {
-    setError({});
-    setIsError(false);
-    setIsLoading(true);
-    setData({});
-    try {
-      await callback();
-      let res = await getAllCards();
-      setIsLoading(false);
-      setData(res);
-    } catch (error) {
-      setError(error);
-      setIsError(true);
-      setIsLoading(false);
-    }
-  };
+  // const genericFunction = async (callback) => {
+  //   setError({});
+  //   setIsError(false);
+  //   setIsLoading(true);
+  //   setData({});
+  //   try {
+  //     await callback();
+  //     let res = await getAllCards();
+  //     setIsLoading(false);
+  //     setData(res);
+  //   } catch (error) {
+  //     setError(error);
+  //     setIsError(true);
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return {
     getData,

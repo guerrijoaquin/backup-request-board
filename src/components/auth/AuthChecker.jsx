@@ -12,9 +12,8 @@ const AuthChecker = ({ children }) => {
   useLayoutEffect(() => {
     const isAuthenticated = async () => {
       try {
-        let data = await authFunctions("check-status");
-        console.log("Data from check-status 1: " + JSON.stringify(data));
-        userLogin(data);
+        let res = await authFunctions("check-status");
+        userLogin(res);
       } catch (error) {
         userLogout();
       }

@@ -4,15 +4,14 @@ import { createContext, useState } from "react";
 export const ActionContext = createContext();
 
 const ContextProvider = ({ children }) => {
+  const [board, setBoard] = useState([]);
+  const [functions, setFunctions] = useState();
   const [user, setUser] = useState({
     isLogged: false,
   });
 
-  const userLogin = (data) => {
-    setUser({
-      ...data,
-      isLogged: true,
-    });
+  const userLogin = (user) => {
+    setUser({ ...user, isLogged: true });
   };
 
   const userLogout = () => {
@@ -20,7 +19,17 @@ const ContextProvider = ({ children }) => {
   };
 
   return (
-    <ActionContext.Provider value={{ userLogin, userLogout, user }}>
+    <ActionContext.Provider
+      value={{
+        userLogin,
+        userLogout,
+        user,
+        board,
+        functions,
+        setFunctions,
+        setBoard,
+      }}
+    >
       {children}
     </ActionContext.Provider>
   );
