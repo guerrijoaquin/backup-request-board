@@ -1,4 +1,4 @@
-import { Box, Button, Drawer, Title } from "@mantine/core";
+import { Box, Button, Container, Drawer, Title } from "@mantine/core";
 import CreateCardForm from "../../components/CreateCardForm";
 import { useDisclosure } from "@mantine/hooks";
 import { CgAddR } from "react-icons/cg";
@@ -6,6 +6,7 @@ import BoardComponent from "./components/BoardComponent";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
+import SearchCard from "../../components/SearchCard/SearchCard";
 
 const Dashboard = () => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -23,10 +24,13 @@ const Dashboard = () => {
           order={1}
           color="indigo"
           size={"3rem"}
-          sx={{ textAlign: "center", padding: "20px 0" }}
+          sx={{ textAlign: "center", padding: "20px" }}
         >
           Request Board
         </Title>
+        <Container sx={{ display: "flex", justifyContent: "center" }}>
+          <SearchCard />
+        </Container>
 
         <Box sx={{ display: "flex", justifyContent: "center" }}>
           <BoardComponent />

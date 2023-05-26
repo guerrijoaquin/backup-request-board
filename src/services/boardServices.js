@@ -87,6 +87,14 @@ export const getAllCards = async () => {
   }
 };
 
+export const searchCardsByQuery = async (cardQuery) => {
+  try {
+    return await fetchContent(`cards?q=${cardQuery}`, credentials);
+  } catch (error) {
+    throw new Error("No se han encontrado cards");
+  }
+};
+
 export const getCommentsByCardId = async (cardId) => {
   try {
     const res = await fetchContent(`cards/${cardId}/comments`, credentials);
