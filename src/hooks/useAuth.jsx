@@ -16,9 +16,8 @@ const useAuth = () => {
       if (successful) successful();
       return res;
     } catch (error) {
-      console.log("Error bro");
       setErrorMessage(error?.response?.data?.message || "Ocurrió un error");
-      throw new Error("Error de autenticacion");
+      throw new Error(error);
     } finally {
       setIsLoading(false);
     }
@@ -28,6 +27,7 @@ const useAuth = () => {
     errorMessage,
     isLoading,
     authFunctions,
+    setErrorMessage,
     data,
   };
 };

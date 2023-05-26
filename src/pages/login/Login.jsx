@@ -19,25 +19,24 @@ import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const { errorMessage, isLoading, authFunctions, data } = useAuth();
+  const { setErrorMessage, errorMessage, isLoading, authFunctions, data } = useAuth();
   const { userLogin } = useContext(ActionContext);
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    form.validate();
-    if (form.isValid()) {
-      try {
-        let res = await authFunctions("login", form.values);
-        if (res) {
-          console.log(res);
-          userLogin(res);
-        }
-      } catch (e) {
-        console.log(e, errorMessage);
+  const handleLogin = async () => {
+
+    if (!form.isValid) return setErrorMessage('Usuario y/o contraseña incorrectos')
+    
+    try {
+      let res = await authFunctions("login", form.values);
+      if (res) {
+        console.log(res);
+        userLogin(res);
       }
+    } catch (e) {
+      setErrorMessage('Usuario y/o contraseña incorrectos')
+      console.log(e, errorMessage);
     }
-    return form.reset();
   };
 
   const form = useForm({
@@ -46,16 +45,18 @@ const Login = () => {
       password: "",
     },
 
-    validate: {
-      email: (value) =>
-        /^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value)
-          ? null
-          : "El email debe pertenecer a adviters",
-      password: (value) =>
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value)
-          ? null
-          : "La contraseña es débil",
-    },
+    // validate: {
+    //   email: (value) =>
+    //     /^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value)
+    //       ? null
+    //       : true,
+    //   password: (value) =>
+    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value)
+    //       ? null
+    //       : true,
+    // },
+
+
   });
 
   return (
@@ -82,7 +83,7 @@ const Login = () => {
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <LoadingOverlay visible={isLoading} overlayBlur={2} />
-        <form onSubmit={handleLogin}>
+        <form onSubmit={form.onSubmit(handleLogin)}>
           <TextInput
             label="Correo electrónico"
             placeholder="tucorreo@ejemplo.com"
@@ -96,6 +97,16 @@ const Login = () => {
             mt="md"
             {...form.getInputProps("password")}
           />
+          <p
+            style={{
+              color: "red",
+              margin: "5px",
+              marginLeft: "0",
+              fontSize: "12px",
+            }}
+          >
+            {errorMessage}
+          </p>
           <Group position="left" mt="lg">
             <Anchor
               component="button"
