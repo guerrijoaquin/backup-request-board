@@ -3,9 +3,13 @@ import { Container, Title } from "@mantine/core";
 import useGenerateBoardData from "../hooks/useGenerateBoardData";
 import InputFields from "./InputFields";
 import { customNotif } from "../utils/simplifiedNotifications";
+import { useContext } from "react";
+import { ActionContext } from "../context/ContextProvider";
 
 const CreateCardForm = ({ closeDrawer }) => {
   const { createNewCard, getData } = useGenerateBoardData();
+  const {user} = useContext(ActionContext)
+  
 
   const handleCreate = async (card) => {
     try {
@@ -30,7 +34,7 @@ const CreateCardForm = ({ closeDrawer }) => {
       >
         Crear petición
       </Title>
-      <InputFields callback={handleCreate} btnText={"Enviar"} />
+      <InputFields callback={handleCreate} btnText={"Enviar"} username={user.username}/>
     </Container>
   );
 };

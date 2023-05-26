@@ -11,9 +11,8 @@ import {
 import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 
-const InputFields = ({ defaultValues, callback, btnText }) => {
 
-
+const InputFields = ({ defaultValues, callback, btnText, username }) => {
 
   useEffect(() => {
     console.log('btntext', btnText)
@@ -24,6 +23,9 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
   }, []);
 
   const form = useForm({
+    initialValues: {
+      label: username
+    },
     validate: {
       title: (value) =>
         value?.length >= 5
@@ -67,13 +69,6 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
         name="description"
         withAsterisk
         {...form.getInputProps("description")}
-      />
-      <TextInput
-        placeholder="Tu nombre"
-        label="Introduzca su nombre"
-        name="label"
-        withAsterisk
-        {...form.getInputProps("label")}
       />
       <Select
         sx={{
