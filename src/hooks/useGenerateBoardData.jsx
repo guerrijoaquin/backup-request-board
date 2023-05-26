@@ -78,23 +78,6 @@ const useGenerateBoardData = () => {
     }
   };
 
-  // const genericFunction = async (callback) => {
-  //   setError({});
-  //   setIsError(false);
-  //   setIsLoading(true);
-  //   setData({});
-  //   try {
-  //     await callback();
-  //     let res = await getAllCards();
-  //     setIsLoading(false);
-  //     setData(res);
-  //   } catch (error) {
-  //     setError(error);
-  //     setIsError(true);
-  //     setIsLoading(false);
-  //   }
-  // };
-
   return {
     getData,
     data,

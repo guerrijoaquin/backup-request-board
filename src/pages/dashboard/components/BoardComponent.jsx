@@ -1,21 +1,21 @@
+/* eslint-disable no-unused-vars */
 import Board from "react-trello";
 import useGenerateBoardData from "../../../hooks/useGenerateBoardData";
-import { Drawer, Loader, Title } from "@mantine/core";
+import { Loader, Title } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
-import InputFields from "../../../components/InputFields";
-import CommentsContainer from "./CommentsContainer";
-import { CardArticle } from "./CardArticle";
 import { ActionContext } from "../../../context/ContextProvider";
 import { customNotif } from "../../../utils/simplifiedNotifications";
 import { EventBusHandler } from "../../../utils/EventBusHandler";
+import CardDrawer from "../../../components/CardDrawer/CardDrawer";
 
-const BoardComponent = (props) => {
+const BoardComponent = () => {
   const { isLoading, isError, getData, updateCardR, deleteCard, getCardById } =
     useGenerateBoardData();
   const [opened, { open, close }] = useDisclosure(false);
   const [cardEditable, setCardEditable] = useState(false);
-  const { user, board, setBoard /*setEventBus, eventBus*/} = useContext(ActionContext);
+  const { user, board, setBoard /*setEventBus, eventBus*/ } =
+    useContext(ActionContext);
 
   const handleDragEnd = async (
     cardId,
@@ -103,45 +103,12 @@ const BoardComponent = (props) => {
   return (
     <>
       {cardEditable && opened ? (
-        <Drawer opened={opened} onClose={close}>
-          {user?.id !== cardEditable?.user?.id ? (
-            <>
-              <Title
-                order={2}
-                color="gray"
-                size={"1.5rem"}
-                sx={{ textAlign: "center", margin: "5px 0" }}
-              >
-                Request Board
-              </Title>
-              <CardArticle
-                createdAt={cardEditable.created_at}
-                description={cardEditable.description}
-                lane={cardEditable.lane}
-                user={cardEditable.user}
-                key={cardEditable.id}
-              />
-            </>
-          ) : (
-            <>
-              <Title
-                order={2}
-                color="gray"
-                size={"1.5rem"}
-                sx={{ textAlign: "center" }}
-              >
-                Editar petición
-              </Title>
-              <InputFields
-                defaultValues={cardEditable}
-                btnText={"Editar"}
-                callback={handleUpdate}
-              />
-            </>
-          )}
-
-          <CommentsContainer cardId={cardEditable.id} />
-        </Drawer>
+        <CardDrawer
+          opened={opened}
+          cardEditable={cardEditable}
+          close={close}
+          callback={handleUpdate}
+        />
       ) : (
         ""
       )}
@@ -153,7 +120,7 @@ const BoardComponent = (props) => {
           handleDragEnd={handleDragEnd}
           laneDraggable={false}
           onCardClick={handleCardClick}
-          eventBusHandle={h => EventBusHandler(h, user.id)}
+          eventBusHandle={(h) => EventBusHandler(h, user.id)}
         />
       )}
     </>
