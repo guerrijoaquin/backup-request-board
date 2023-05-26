@@ -46,8 +46,8 @@ const Dashboard = () => {
         color="indigo"
         title="Cerrar sesión"
         sx={{ position: "fixed", top: "10px", right: "10px" }}
-        onClick={() => {
-          userLogout();
+        onClick={async () => {
+          await userLogout();
           navigate("/");
         }}
         size="md"

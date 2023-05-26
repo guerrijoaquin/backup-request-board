@@ -25,8 +25,8 @@ const CreateAccount = () => {
     initialValues: {
       email: "",
       username: "",
-      password: "holaAA2",
-      rePassword: "holaAA2",
+      password: "",
+      rePassword: "",
     },
 
     validate: {
