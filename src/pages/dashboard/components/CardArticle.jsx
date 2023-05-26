@@ -42,7 +42,7 @@ export function CardArticle({ lane, description, createdAt, user }) {
               •
             </Text>
             <Text size="xs" color="dimmed">
-              {DateTime.fromISO(createdAt).toRelative()}
+              {DateTime.fromMillis(new Date(createdAt).getMilliseconds()).toRelative()}
             </Text>
           </Group>
         </div>

@@ -7,15 +7,15 @@ import InputFields from "../../../components/InputFields";
 import CommentsContainer from "./CommentsContainer";
 import { CardArticle } from "./CardArticle";
 import { ActionContext } from "../../../context/ContextProvider";
-import { notifications } from "@mantine/notifications";
 import { customNotif } from "../../../utils/simplifiedNotifications";
+import { EventBusHandler } from "../../../utils/EventBusHandler";
 
-const BoardComponent = () => {
+const BoardComponent = (props) => {
   const { isLoading, isError, getData, updateCardR, deleteCard, getCardById } =
     useGenerateBoardData();
   const [opened, { open, close }] = useDisclosure(false);
   const [cardEditable, setCardEditable] = useState(false);
-  const { user, board, setFunctions } = useContext(ActionContext);
+  const { user, board, setBoard /*setEventBus, eventBus*/} = useContext(ActionContext);
 
   const handleDragEnd = async (
     cardId,
@@ -82,9 +82,6 @@ const BoardComponent = () => {
         "No se ha podido actualizar, intente nuevamente y verifique la información"
       );
     }
-  };
-  const setEventBus = (handle) => {
-    setFunctions(handle);
   };
   useEffect(() => {
     let fetch = async () => {
@@ -156,7 +153,7 @@ const BoardComponent = () => {
           handleDragEnd={handleDragEnd}
           laneDraggable={false}
           onCardClick={handleCardClick}
-          eventBusHandle={setEventBus}
+          eventBusHandle={h => EventBusHandler(h, user.id)}
         />
       )}
     </>

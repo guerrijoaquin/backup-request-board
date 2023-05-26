@@ -12,7 +12,12 @@ import { useForm } from "@mantine/form";
 import { useEffect } from "react";
 
 const InputFields = ({ defaultValues, callback, btnText }) => {
+
+
+
   useEffect(() => {
+    console.log('btntext', btnText)
+    console.log()
     if (defaultValues) {
       form.setValues({ ...defaultValues });
     }
@@ -71,6 +76,9 @@ const InputFields = ({ defaultValues, callback, btnText }) => {
         {...form.getInputProps("label")}
       />
       <Select
+        sx={{
+          display: btnText == 'Editar' ? 'none' : 'inherit'
+        }}
         data={["VENDO", "COMPRO", "ALQUILO", "REGALO"]}
         placeholder="Seleccionar"
         label="Selecciona tu columna"

@@ -11,7 +11,6 @@ const CreateCardForm = ({ closeDrawer }) => {
     try {
       let res = await createNewCard(card);
       console.log(res);
-      await getData();
       closeDrawer();
     } catch (error) {
       customNotif(

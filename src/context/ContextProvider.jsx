@@ -9,6 +9,7 @@ const ContextProvider = ({ children }) => {
   const {isLoading, errorMessage, authFunctions} = useAuth()
   const [board, setBoard] = useState([]);
   const [functions, setFunctions] = useState();
+  const [eventBus, setEventBus] = useState();
   const [user, setUser] = useState({
     isLogged: false,
   });
@@ -19,7 +20,7 @@ const ContextProvider = ({ children }) => {
 
   const userLogout = async () => {
     
-    authFunctions('logout', null, () => setUser({ isLogged: false }))
+    await authFunctions('logout', null, () => setUser({ isLogged: false }))
 
     
   };
@@ -34,6 +35,8 @@ const ContextProvider = ({ children }) => {
         functions,
         setFunctions,
         setBoard,
+        eventBus,
+        setEventBus
       }}
     >
       {children}
