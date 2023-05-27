@@ -26,11 +26,7 @@ const BoardComponent = () => {
   ) => {
     console.log(cardId, sourceLaneId, targetLaneId, position, cardDetails);
     if (sourceLaneId === targetLaneId) {
-      await getData();
-      return customNotif(
-        "error",
-        "No se puede mover una card en la misma columna."
-      );
+      return;
     }
     if (cardDetails?.user?.id !== user?.id) {
       await getData();
