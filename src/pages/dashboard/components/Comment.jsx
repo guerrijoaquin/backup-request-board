@@ -9,7 +9,7 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function Comment({ createdAt, description, user }) {
+export function Comment({ description, user, dateString }) {
   const { classes } = useStyles();
   return (
     <Paper p="md">
@@ -20,7 +20,7 @@ export function Comment({ createdAt, description, user }) {
         <div>
           <Text size="sm">{user}</Text>
           <Text size="xs" color="dimmed">
-            {DateTime.fromISO(createdAt).toRelative()}
+            {dateString}
           </Text>
         </div>
       </Group>

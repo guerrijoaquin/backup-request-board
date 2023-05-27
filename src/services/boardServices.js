@@ -103,3 +103,24 @@ export const getCommentsByCardId = async (cardId) => {
     throw new Error("No se ha podido encontrar los comentarios");
   }
 };
+
+export const createComment = async (cardId, comment, username) => {
+
+  const config = {
+    method: "POST",
+    ...credentials,
+    body: {
+      description: comment,
+      username
+    },
+  };
+
+
+  try {
+    const res = await fetchContent(`cards/${cardId}/comments`, config);
+    return res;
+  } catch (error) {
+    throw new Error("No se ha podido comentar la petición");
+  }
+
+}

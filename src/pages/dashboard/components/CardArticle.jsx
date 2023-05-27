@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import { createStyles, Card, Avatar, Text, Group } from "@mantine/core";
+import { createStyles, Card, Avatar, Text, Group, Button } from "@mantine/core";
 import { DateTime } from "luxon";
 
 const useStyles = createStyles((theme) => ({
@@ -19,14 +19,15 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function CardArticle({ lane, description, createdAt, user }) {
+export function CardArticle({ lane, description, dateString, user }) {
+  console.log('DATE STRING', dateString)
   const { classes } = useStyles();
   return (
     <Card withBorder radius="md" p={0} className={classes.card}>
       <Group noWrap spacing={0}>
         <div className={classes.body}>
           <Text transform="uppercase" color="dimmed" weight={700} size="xs">
-            {lane}
+            {lane.title}
           </Text>
           <Text className={classes.title} mt="xs" mb="md">
             {description}
@@ -42,7 +43,7 @@ export function CardArticle({ lane, description, createdAt, user }) {
               •
             </Text>
             <Text size="xs" color="dimmed">
-              {DateTime.fromMillis(new Date(createdAt).getMilliseconds()).toRelative()}
+              {dateString}
             </Text>
           </Group>
         </div>

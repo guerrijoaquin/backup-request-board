@@ -48,7 +48,7 @@ const CommentsContainer = ({ cardId }) => {
           {data.map((comment) => {
             return (
               <Comment
-                createdAt={comment.created_at}
+                dateString={comment.dateString}
                 description={comment.description}
                 user={comment.username}
                 key={comment.id}
