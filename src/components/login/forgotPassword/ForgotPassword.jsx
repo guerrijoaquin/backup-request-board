@@ -83,7 +83,7 @@ const ForgotPassword = () => {
     return (
         <Center>
             <Container size={830} my={50}>
-                <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+                <Stepper allowNextStepsSelect={false} active={active} onStepClick={setActive} breakpoint="sm">
                     <Stepper.Step label="Paso 1" description="Ingresa tu correo electrónico">
                         <Container size={400} my={50}>
                             <LoadingOverlay visible={isLoading} overlayBlur={2} />

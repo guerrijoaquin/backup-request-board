@@ -68,9 +68,9 @@ const CreateAccount = () => {
   return (
     <Center>
       <Container size={700} my={50}>
-        <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+        <Stepper allowNextStepsSelect={false} active={active} onStepClick={setActive} breakpoint="sm">
           <Stepper.Step label="Primer paso" description="Crear una cuenta">
-            <Container size={400} my={50} pos="relative">
+            <Container size={700} my={50} pos="relative">
               <LoadingOverlay visible={isLoading} overlayBlur={2} />
               <form onSubmit={signUpForm.onSubmit(SignUp)}>
                 <TextInput

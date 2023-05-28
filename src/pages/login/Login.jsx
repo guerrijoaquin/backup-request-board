@@ -15,8 +15,9 @@ import {
 } from "@mantine/core";
 import useAuth from "../../hooks/useAuth";
 import { useForm } from "@mantine/form";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { ActionContext } from "../../context/ContextProvider";
+import { customNotif } from "../../utils/simplifiedNotifications";
 
 const Login = () => {
   const { setErrorMessage, errorMessage, isLoading, authFunctions, data } =
@@ -35,7 +36,7 @@ const Login = () => {
         userLogin(res);
       }
     } catch (e) {
-      setErrorMessage("Usuario y/o contraseña incorrectos");
+      if(!errorMessage) setErrorMessage("Usuario y/o contraseña incorrectos");
       console.log(e, errorMessage);
     }
   };
@@ -57,6 +58,14 @@ const Login = () => {
           : "Contraseña inválida",
     },
   });
+
+  useEffect(() => {
+
+    const activated = new URLSearchParams(window.location.search).get('activated')
+
+    if (activated) customNotif('success', 'Email verificado. Inicie sesión')
+
+  }, [])
 
   return (
     <Container size={420} my={40}>
