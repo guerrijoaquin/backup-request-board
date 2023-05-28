@@ -105,16 +105,14 @@ export const getCommentsByCardId = async (cardId) => {
 };
 
 export const createComment = async (cardId, comment, username) => {
-
   const config = {
     method: "POST",
     ...credentials,
     body: {
       description: comment,
-      username
+      username,
     },
   };
-
 
   try {
     const res = await fetchContent(`cards/${cardId}/comments`, config);
@@ -122,5 +120,17 @@ export const createComment = async (cardId, comment, username) => {
   } catch (error) {
     throw new Error("No se ha podido comentar la petición");
   }
+};
 
-}
+export const deleteCommentById = async (commentId) => {
+  const config = {
+    method: "DELETE",
+    ...credentials,
+  };
+
+  try {
+    await fetchContent(`comments/${commentId}`, config);
+  } catch (error) {
+    throw new Error("No se ha logrado eliminar el comentario", error);
+  }
+};

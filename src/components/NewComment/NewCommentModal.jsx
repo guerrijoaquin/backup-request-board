@@ -1,44 +1,46 @@
-import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button, Group, Textarea, LoadingOverlay } from '@mantine/core';
-import { useForm } from '@mantine/form';
-import { createComment } from '../../services/boardServices';
-import { useState } from 'react';
-import { customNotif } from '../../utils/simplifiedNotifications';
+/* eslint-disable react/prop-types */
+import { Modal, Button, Textarea, LoadingOverlay } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { createComment } from "../../services/boardServices";
+import { useState } from "react";
+import { customNotif } from "../../utils/simplifiedNotifications";
 
-export const NewCommentModal = ({opened, close, cardId, username, closeCard}) => {
+export const NewCommentModal = ({
+  opened,
+  close,
+  cardId,
+  username,
+  closeCard,
+}) => {
+  const [loading, setLoading] = useState(false);
 
-  const [loading, setLoading] = useState(false)
+  const postComment = async ({ description }) => {
+    setLoading(true);
 
-  const postComment = async ({description}) => {
-
-    setLoading(true)
-    
     try {
-
       const res = await createComment(cardId, description, username);
-      customNotif('show', 'Se publicó el comentario')
-
+      customNotif("show", "Se publicó el comentario");
     } catch (e) {
-      customNotif('error', 'No se pudo publicar el comentario. Intente nuevamente.')
+      customNotif(
+        "error",
+        "No se pudo publicar el comentario. Intente nuevamente."
+      );
     }
 
-  
-    setLoading(false)
-    close()
-    closeCard()
-
-  }
+    setLoading(false);
+    close();
+    closeCard();
+  };
 
   const form = useForm({
     initialValues: {
-      description: ''
+      description: "",
     },
 
     validate: {
-      description: (value) => value.length != 0 ? null : 'Ingrese un comentario'
+      description: (value) =>
+        value.length != 0 ? null : "Ingrese un comentario",
     },
-
-
   });
 
   return (
@@ -46,16 +48,18 @@ export const NewCommentModal = ({opened, close, cardId, username, closeCard}) =>
       <Modal opened={opened} onClose={close} title="Comentar petición">
         <LoadingOverlay visible={loading} overlayBlur={2} />
         <form onSubmit={form.onSubmit(postComment)}>
-        <Textarea
-          placeholder="Tu comentario"
-          label="Comentario"
-          withAsterisk
-          autosize
-          {...form.getInputProps('description')}
-        />
-        <Button type='submit' mt={'xs'} fullWidth>PUBLICAR COMENTARIO</Button>
+          <Textarea
+            placeholder="Tu comentario"
+            label="Comentario"
+            withAsterisk
+            autosize
+            {...form.getInputProps("description")}
+          />
+          <Button type="submit" mt={"xs"} fullWidth>
+            PUBLICAR COMENTARIO
+          </Button>
         </form>
       </Modal>
     </>
   );
-}
+};

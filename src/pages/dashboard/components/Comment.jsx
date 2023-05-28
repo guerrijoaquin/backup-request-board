@@ -1,6 +1,13 @@
 /* eslint-disable react/prop-types */
-import { createStyles, Text, Avatar, Group, rem, Paper } from "@mantine/core";
-import { DateTime } from "luxon";
+import {
+  createStyles,
+  Text,
+  Avatar,
+  Group,
+  rem,
+  Paper,
+  CloseButton,
+} from "@mantine/core";
 
 const useStyles = createStyles((theme) => ({
   body: {
@@ -9,10 +16,17 @@ const useStyles = createStyles((theme) => ({
   },
 }));
 
-export function Comment({ description, user, dateString }) {
+export function Comment({
+  description,
+  user,
+  dateString,
+  userContextId,
+  commentId,
+  handleDelete,
+}) {
   const { classes } = useStyles();
   return (
-    <Paper p="md">
+    <Paper p="md" sx={{ position: "relative" }}>
       <Group>
         <Avatar radius="xl" color="indigo">
           {user?.charAt(0)?.toUpperCase()}
@@ -27,6 +41,13 @@ export function Comment({ description, user, dateString }) {
       <Text className={classes.body} size="sm">
         {description}
       </Text>
+      {user === userContextId && (
+        <CloseButton
+          onClick={() => handleDelete(commentId)}
+          sx={{ position: "absolute", right: 16, top: 16 }}
+          title="Delete comment"
+        />
+      )}
     </Paper>
   );
 }

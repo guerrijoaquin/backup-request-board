@@ -7,9 +7,8 @@ const useAuth = () => {
   const [isLoading, setIsLoading] = useState(false);
 
   const authFunctions = async (endpoint, user = null, successful) => {
-    setIsLoading(true);
-
     try {
+      setIsLoading(true);
       let res = await authFunction(endpoint, user);
       setIsLoading(false);
       setData(res);

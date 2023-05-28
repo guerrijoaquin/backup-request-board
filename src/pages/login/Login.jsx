@@ -19,14 +19,15 @@ import { useContext } from "react";
 import { ActionContext } from "../../context/ContextProvider";
 
 const Login = () => {
-  const { setErrorMessage, errorMessage, isLoading, authFunctions, data } = useAuth();
+  const { setErrorMessage, errorMessage, isLoading, authFunctions, data } =
+    useAuth();
   const { userLogin } = useContext(ActionContext);
   const navigate = useNavigate();
 
   const handleLogin = async () => {
+    if (!form.isValid)
+      return setErrorMessage("Usuario y/o contraseña incorrectos");
 
-    if (!form.isValid) return setErrorMessage('Usuario y/o contraseña incorrectos')
-    
     try {
       let res = await authFunctions("login", form.values);
       if (res) {
@@ -34,7 +35,7 @@ const Login = () => {
         userLogin(res);
       }
     } catch (e) {
-      setErrorMessage('Usuario y/o contraseña incorrectos')
+      setErrorMessage("Usuario y/o contraseña incorrectos");
       console.log(e, errorMessage);
     }
   };
@@ -45,18 +46,16 @@ const Login = () => {
       password: "",
     },
 
-    // validate: {
-    //   email: (value) =>
-    //     /^[a-zA-Z0-9\._%+-]+@adviters\.com$/.test(value)
-    //       ? null
-    //       : true,
-    //   password: (value) =>
-    //     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value)
-    //       ? null
-    //       : true,
-    // },
-
-
+    validate: {
+      email: (value) =>
+        /^[a-zA-Z0-9._%+-]+@adviters\.com$/.test(value)
+          ? null
+          : "El correo es inválido",
+      password: (value) =>
+        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$/.test(value)
+          ? null
+          : "Contraseña inválida",
+    },
   });
 
   return (
