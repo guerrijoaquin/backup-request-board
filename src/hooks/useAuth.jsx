@@ -16,7 +16,7 @@ const useAuth = () => {
       return res;
     } catch (error) {
       setErrorMessage(error?.response?.data?.message || "Ocurrió un error");
-      throw new Error(error);
+      throw error;
     } finally {
       setIsLoading(false);
     }
