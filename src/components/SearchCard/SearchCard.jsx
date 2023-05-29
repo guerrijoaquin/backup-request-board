@@ -54,31 +54,33 @@ const SearchCard = () => {
         ...others
       },
       ref
-    ) => (
-      <div
-        ref={ref}
-        onClick={handle}
-        style={{ cursor: "pointer", margin: "5px 0" }}
-      >
-        <Group noWrap>
-          <Text color="indigo" weight={"bolder"}>
-            {lane}
-          </Text>
-          <Divider size="xs" orientation="vertical" />
-          <div>
-            <Text color="gray" size={"xs"}>
-              {user?.username}
+    ) => {
+      return (
+        <div
+          ref={ref}
+          onClick={handle}
+          style={{ cursor: "pointer", margin: "5px 0" }}
+        >
+          <Group noWrap>
+            <Text color="indigo" weight={"bolder"}>
+              {lane?.title}
             </Text>
-            <Text color="gray" weight={"bold"}>
-              {title}
-            </Text>
-            <Text size="sm" color="dimmed">
-              {description}
-            </Text>
-          </div>
-        </Group>
-      </div>
-    )
+            <Divider size="xs" orientation="vertical" />
+            <div>
+              <Text color="gray" size={"xs"}>
+                {user?.username}
+              </Text>
+              <Text color="gray" weight={"bold"}>
+                {title}
+              </Text>
+              <Text size="sm" color="dimmed">
+                {description}
+              </Text>
+            </div>
+          </Group>
+        </div>
+      );
+    }
   );
 
   const form = useForm({
