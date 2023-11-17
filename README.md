@@ -6,4 +6,4 @@
 4. Levantar: `npm run dev`
 
 # REQUEST BOARD BACK
-https://github.com/zycness/react-trello-api-nestjs
+https://github.com/guerrijoaquin/backup-request-board-api
